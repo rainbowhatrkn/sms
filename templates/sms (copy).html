@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envoyer un SMS gratuit</title>
+    <style>
+        body {
+            background-color: #F2EAE2;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #FF5733;
+        }
+
+        form {
+            background-color: #E0E0E0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 0 auto;
+            max-width: 400px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #FF5733;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #E04A29;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Envoyer un SMS gratuit</h1>
+    <p>Vous pouvez envoyer un SMS gratuit par jour en utilisant ce service.</p>
+    <form id="smsForm">
+        <label for="phoneNumber">Numéro de téléphone :</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" required><br>
+        <label for="message">Message :</label>
+        <textarea id="message" name="message" rows="4" required></textarea><br>
+        <button type="submit">Envoyer SMS</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+<script>
+    // Lorsque le formulaire est soumis
+    document.getElementById("smsForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Empêche la soumission du formulaire par défaut
+
+        // Récupérez les valeurs du formulaire
+        const phoneNumber = document.getElementById("phoneNumber").value;
+        const message = document.getElementById("message").value;
+
+        // Effectuez une requête AJAX pour envoyer le SMS
+        fetch("/send_sms", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ phoneNumber, message }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Affichez le résultat de l'envoi du SMS dans la div "result"
+            const resultDiv = document.getElementById("result");
+            if (data.success) {
+                resultDiv.style.color = "green";
+                resultDiv.textContent = "SMS envoyé avec succès!";
+            } else {
+                resultDiv.style.color = "red";
+                resultDiv.textContent = "Erreur lors de l'envoi du SMS: " + data.message;
+            }
+        })
+        .catch(error => {
+            console.error("Erreur lors de la requête : ", error);
+        });
+    });
+</script>
+    </script>
+</body>
+</html>
